@@ -1,6 +1,7 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+inherit perl-module
 
 DESCRIPTION="A high performance, extremely flexible system for monitoring trends in time-series data"
 HOMEPAGE="http://cricket.sourceforge.net/"
