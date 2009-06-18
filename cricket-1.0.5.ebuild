@@ -2,23 +2,22 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION=""
+DESCRIPTION="A high performance, extremely flexible system for monitoring trends in time-series data"
 HOMEPAGE="http://cricket.sourceforge.net/"
-SRC_URI=""
+SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 
-LICENSE=""
+LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86"
-IUSE=""
+KEYWORDS="~amd64 ~x86"
+IUSE="perl"
 
-DEPEND=""
-RDEPEND=""
-
-
-dev-perl/MD5
-dev-perl/libwww-perl
-virtual/perl-DB_File
-dev-perl/TimeDate
-virtual/perl-Time-HiRes
-dev-perl/SNMP_Session
-net-analyzer-rrdtool
+DEPEND="
+	dev-lang/perl
+	dev-perl/libwww-perl
+	dev-perl/SNMP_Session
+	dev-perl/TimeDate
+	net-analyzer-rrdtool	
+	virtual/perl-DB_File
+	virtual/perl-Digest-MD5
+	virtual/perl-Time-HiRes"
+RDEPEND="${DEPEND}"
