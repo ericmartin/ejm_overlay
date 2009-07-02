@@ -17,8 +17,18 @@ DEPEND="
 	dev-perl/libwww-perl
 	dev-perl/SNMP_Session
 	dev-perl/TimeDate
-	net-analyzer-rrdtool	
+	net-analyzer/rrdtool	
 	virtual/perl-DB_File
 	virtual/perl-Digest-MD5
 	virtual/perl-Time-HiRes"
 RDEPEND="${DEPEND}"
+
+src_compile() {
+	econf || die "econf failed"
+	emake || die "emake failed"
+}
+
+src_install() {
+	einstall || die "einstalled failed"
+	dodoc README CHANGES || die 
+}
