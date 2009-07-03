@@ -30,10 +30,11 @@ pkg_setup() {
 
 src_compile() {
 	econf || die "econf failed"
-	emake || die "emake failed"
 }
 
 src_install() {
-	einstall || die "einstalled failed"
-	dodoc README CHANGES || die 
+	dodir /home/cricket/${PF} || die "could not install"
+	dosym /home/cricket/${PF} /home/cricket/cricket || die "could not install"
+	dodoc README CHANGES || die "could not install documentation"
+	dohtml doc/* || die "could not install documentation"
 }
