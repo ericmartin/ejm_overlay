@@ -32,18 +32,11 @@ src_compile() {
 	econf || die "econf failed"
 }
 
-pkg_preinst() {
-	dodir /home/cricket/${PF} || die "could not create directory"
-	dosym /home/cricket/${PF} /home/cricket/cricket || die "could not create
-	symlink"
-}
-
 src_install() {
-	emake DESTDIR="${D}home/cricket"
-	#	mv ${A} ${D}home/cricket/${PF} || die "could not install"
-}
-
-pkg_postinst() {
+	dodir /home/cricket/${PF} || die "could not create directory"
+	dosym /home/cricket/${PF} /home/cricket/cricket || die "could not create symlink"
+	cp -R "${S}/" "${D}/home/cricket/" || die "copy failed"
+	
 	dodoc README CHANGES || die "could not install documentation"
 	dohtml doc/* || die "could not install documentation"
 }
