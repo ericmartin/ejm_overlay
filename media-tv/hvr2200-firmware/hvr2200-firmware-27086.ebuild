@@ -27,7 +27,7 @@ src_compile(){
 }
 
 src_install (){
-	dodir /lib/firmware || die "Couldn't create /lib/firmware"
-	insinto /lib/firmware || die "Couldn't install firmware files"
-	doins *.fw || die "Couldn't install firmware files"
+	dodir /lib/firmware || die "Could not create /lib/firmware"
+	insinto /lib/firmware || die "Could not install firmware files"
+	doins *.fw || die "Could not install firmware files"
 }
