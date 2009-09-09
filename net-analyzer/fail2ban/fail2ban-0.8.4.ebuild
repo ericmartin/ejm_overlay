@@ -20,8 +20,6 @@ RDEPEND="${DEPEND}
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-
-#	epatch "${FILESDIR}/${PN}-CVE-2009-0362.patch"
 }
 
 src_install() {
