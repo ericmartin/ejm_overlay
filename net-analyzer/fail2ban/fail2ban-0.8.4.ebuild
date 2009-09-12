@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/net-analyzer/fail2ban/fail2ban-0.8.4.ebuild,v 1.1 2009/09/11 13:37:48 patrick Exp $
 
 inherit distutils
 
@@ -16,11 +16,6 @@ IUSE=""
 DEPEND=">=dev-lang/python-2.4"
 RDEPEND="${DEPEND}
 	virtual/mta"
-
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-}
 
 src_install() {
 	distutils_src_install
