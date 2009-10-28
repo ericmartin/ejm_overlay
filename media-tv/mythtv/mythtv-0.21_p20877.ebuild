@@ -155,6 +155,7 @@ src_configure() {
 	fi
 
 #	myconf="${myconf} --extra-cxxflags=\"${CXXFLAGS}\" --extra-cflags=\"${CFLAGS}\""
+	hasq distcc ${FEATURES} && myconf="${myconf} --cross-compile"
 	hasq distcc ${FEATURES} || myconf="${myconf} --disable-distcc"
 	hasq ccache ${FEATURES} || myconf="${myconf} --disable-ccache"
 
