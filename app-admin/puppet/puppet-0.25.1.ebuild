@@ -43,7 +43,6 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-0.24.6-eix.patch"
-	epatch "${FILESDIR}/${PN}-0.25.0-cert-names.patch"
 }
 
 src_compile() {
