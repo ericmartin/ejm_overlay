@@ -15,3 +15,10 @@ IUSE=""
 DEPEND=""
 RDEPEND=""
 
+src_compile() {
+	make all || die "Couldn't make"
+}
+
+src_install() {
+	make install || die "couldn't install"
+}
