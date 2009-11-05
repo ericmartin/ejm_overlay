@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<layman>
+	<overlay
+		type = "git"
+		src  = "git://github.com/ericmartin/ejm_overlay.git"
+		name = "ejm"
+		status = "unofficial"
+		contact = "eric.joshua.martin@gmail.com">
+
+		<link>
+			http://github.com/ericmartin/ejm_overlay/tree/master
+		</link>
+		<description>
+			A Gentoo overlay with various packages including network utilities and multimedia drivers.
+		</description>
+	</overlay>
+</layman>
+
