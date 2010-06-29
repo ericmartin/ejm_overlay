@@ -194,9 +194,9 @@ src_compile() {
 
 	# check for missing deps and ask to report if something is broken
 	local myconf="--verbose \
-		$(enable_extension_withonly mysql mysql)
-		$(enable_extension_withonly postgresql postgres)
-		$(enable_extension_withonly fastcgi fastcgi)
+		$(enable_extension_withonly mysql mysql) \
+		$(enable_extension_withonly postgresql postgres) \
+		$(enable_extension_withonly fastcgi fastcgi) \
 		$(enable_extension_withonly fastcgi lighttpd)" \
 
 	if ! useq fastcgi && ! useq lighttpd; then
@@ -217,7 +217,7 @@ src_compile() {
 
 src_install() {
 	webapp_src_preinst
-	emake install || die
+	emake install || die "Can not install"
 
 	# make sure we don't clobber existing site configuration
 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
