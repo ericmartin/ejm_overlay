@@ -193,14 +193,14 @@ src_compile() {
 		${dbtype} ${dba}
 
 	# check for missing deps and ask to report if something is broken
-	local my_conf="--verbose "
-	enable_extension_withonly  mysql      mysql
-	enable_extension_withonly  postgresql postgres
-	enable_extension_withonly  fastcgi    fastcgi
-	enable_extension_withonly  fastcgi    lighttpd
+	local myconf="--verbose \
+		$(enable_extension_withonly mysql mysql)
+		$(enable_extension_withonly postgresql postgres)
+		$(enable_extension_withonly fastcgi fastcgi)
+		$(enable_extension_withonly fastcgi lighttpd)" \
 
 	if ! useq fastcgi && ! useq lighttpd; then
-		my_conf="${my_conf} --with-modperl2"
+		myconf="${myconf} --with-modperl2"
 	fi
 
 	/usr/bin/perl ./sbin/rt-test-dependencies ${myconf} > "${T}"/t
@@ -217,7 +217,7 @@ src_compile() {
 
 src_install() {
 	webapp_src_preinst
-	make install || die
+	emake install || die
 
 	# make sure we don't clobber existing site configuration
 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
