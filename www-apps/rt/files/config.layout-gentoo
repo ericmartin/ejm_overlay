@@ -10,6 +10,7 @@
   datadir:		${prefix}/share
   htmldir:		HTMLDIR
   manualdir:		${datadir}/doc
+  fontdir:		${datadir}/fonts
   localstatedir:	${prefix}/var
   logfiledir:		${localstatedir}/log
   masonstatedir:	${localstatedir}/mason_data
