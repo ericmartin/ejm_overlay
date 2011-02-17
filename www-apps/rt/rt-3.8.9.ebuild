@@ -44,7 +44,7 @@ DEPEND="
 	dev-perl/HTML-Parser
 	>=dev-perl/HTML-Scrubber-0.08
 	dev-perl/HTML-Tree
-	>=dev-perl/HTTP-Server-Simple-Mason-0.09
+	>=dev-perl/HTTP-Server-Simple-Mason-0.14
 	dev-perl/libwww-perl
 	dev-perl/locale-maketext-fuzzy
 	>=dev-perl/locale-maketext-lexicon-0.32
