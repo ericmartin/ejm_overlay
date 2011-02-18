@@ -218,6 +218,8 @@ src_compile() {
 src_install() {
 	webapp_src_preinst
 	emake install || die "Cannot install"
+	
+	dodoc UPGRADING*
 
 	# make sure we don't clobber existing site configuration
 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
