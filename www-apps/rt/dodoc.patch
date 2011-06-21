@@ -1,0 +1,13 @@
+diff --git a/www-apps/rt/rt-3.8.9.ebuild b/www-apps/rt/rt-3.8.9.ebuild
+index 586309d..dc2b9f2 100644
+--- a/www-apps/rt/rt-3.8.9.ebuild
++++ b/www-apps/rt/rt-3.8.9.ebuild
+@@ -218,6 +218,8 @@ src_compile() {
+ src_install() {
+ 	webapp_src_preinst
+ 	emake install || die "Cannot install"
++	
++	dodoc UPGRADING*
+ 
+ 	# make sure we don't clobber existing site configuration
+ 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
