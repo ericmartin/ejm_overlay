@@ -75,6 +75,13 @@ DEPEND="
 	dev-perl/IPC-Run3
 	dev-perl/Net-CIDR
 	>=dev-perl/Class-Accessor-0.34
+	dev-perl/Convert-Color
+	dev-perl/Plack
+	dev-Perl/HTML-Quoted
+	dev-perl/Regexp-Common-net-CIDR
+	dev-perl/HTML-Mason-PSGIHandler
+	dev-perl/CGI-Emulate-PSGI
+	dev-perl/CGI-PSGI
 
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
