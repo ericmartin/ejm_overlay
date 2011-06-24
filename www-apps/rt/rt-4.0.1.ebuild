@@ -82,6 +82,9 @@ DEPEND="
 	dev-perl/HTML-Mason-PSGIHandler
 	dev-perl/CGI-Emulate-PSGI
 	dev-perl/CGI-PSGI
+	>=dev-perl/log-dispatch-2.23
+	dev-perl/JavaScript-Minifier
+	dev-perl/Text-Password-Pronounceable
 
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
