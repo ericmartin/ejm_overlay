@@ -85,6 +85,7 @@ DEPEND="
 	>=dev-perl/log-dispatch-2.23
 	dev-perl/JavaScript-Minifier
 	dev-perl/Text-Password-Pronounceable
+	dev-perl/Starlet
 
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
