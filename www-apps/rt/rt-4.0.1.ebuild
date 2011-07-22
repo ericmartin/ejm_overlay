@@ -230,7 +230,11 @@ src_install() {
 	webapp_src_preinst
 	emake install || die "Cannot install"
 	
-#	dodoc docs/UPGRADING-2.0
+	dodoc ${S}/docs/UPGRADING*
+	dodoc ${S}/docs/*.pod
+	dodoc ${S}/docs/network-diagram.svg
+	cp -R ${S}/docs/customizing/ ${D}/usr/share/doc/${P}/
+	cp -R ${S}/docs/extending/ ${D}/usr/share/doc/${P}/
 
 	# make sure we don't clobber existing site configuration
 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
