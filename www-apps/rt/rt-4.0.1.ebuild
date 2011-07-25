@@ -27,7 +27,7 @@ DEPEND="
 	>=dev-perl/class-returnvalue-0.40
 	>=dev-perl/CSS-Squish-0.06
 	>=dev-perl/DBI-1.37
-	>=dev-perl/dbix-searchbuilder-1.54
+	>=dev-perl/dbix-searchbuilder-1.59
 	>=dev-perl/Devel-StackTrace-1.19
 	dev-perl/GD
 	dev-perl/GDGraph
@@ -86,6 +86,7 @@ DEPEND="
 	dev-perl/JavaScript-Minifier
 	dev-perl/Text-Password-Pronounceable
 	dev-perl/Starlet
+	dev-perl/DBD-SQLite
 
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
