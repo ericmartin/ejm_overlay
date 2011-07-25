@@ -77,7 +77,7 @@ DEPEND="
 	>=dev-perl/Class-Accessor-0.34
 	dev-perl/Convert-Color
 	dev-perl/Plack
-	dev-Perl/HTML-Quoted
+	dev-perl/HTML-Quoted
 	dev-perl/Regexp-Common-net-CIDR
 	dev-perl/HTML-Mason-PSGIHandler
 	dev-perl/CGI-Emulate-PSGI
