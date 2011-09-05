@@ -3,7 +3,6 @@ inherit webapp eutils depend.apache confutils
 DESCRIPTION="RT is an enterprise-grade ticketing system"
 HOMEPAGE="http://www.bestpractical.com/rt/"
 SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
-RESTRICT="mirror"
 
 KEYWORDS="~amd64 ~ppc ~x86"
 LICENSE="GPL-2"
