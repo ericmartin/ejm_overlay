@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-  <herd>web-apps</herd>
-  <maintainer>
-  	<email>eric.joshua.martin@gmail.com</email>
-	<name>Eric Martin</name>
-  <maintainer>
-  <use>
-    <flag name="lighttpd">Add <pkg>www-servers/lighttpd</pkg> support</flag>
-    <flag name="modperl">Enable <pkg>www-apache/mod_perl</pkg> support</flag>
-  </use>
+	<herd>web-apps</herd>
+	<maintainer>
+		<email>eric.joshua.martin@gmail.com</email>
+		<name>Eric Martin</name>
+	</maintainer>
+	<flag name="lighttpd">Add <pkg>www-servers/lighttpd</pkg> support</flag>
+	<flag name="modperl">Enable <pkg>www-apache/mod_perl</pkg> support</flag>
+	<longdescription>RT is an enterprise-grade ticketing system</longdescription>
 </pkgmetadata>
