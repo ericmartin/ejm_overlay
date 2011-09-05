@@ -199,7 +199,7 @@ src_compile() {
 	enable_extension_withonly  fastcgi    fastcgi
 	enable_extension_withonly  fastcgi    lighttpd
 
-	if ! useq fastcgi && ! useq lighttpd; then
+	if ! use fastcgi && ! use lighttpd; then
 		my_conf="${my_conf} --with-modperl2"
 	fi
 
