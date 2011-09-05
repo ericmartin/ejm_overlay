@@ -8,5 +8,6 @@
   <maintainer>
   <use>
     <flag name="lighttpd">Add <pkg>www-servers/lighttpd</pkg> support</flag>
+    <flag name="modperl">Enable <pkg>www-apache/mod_perl</pkg> support</flag>
   </use>
 </pkgmetadata>
