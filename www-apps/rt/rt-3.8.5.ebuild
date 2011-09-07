@@ -8,7 +8,7 @@ DESCRIPTION="RT is an enterprise-grade ticketing system"
 HOMEPAGE="http://www.bestpractical.com/rt/"
 SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
 
-KEYWORDS="~amd64 ~ppc ~x86"
+KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
 IUSE="mysql postgres fastcgi modperl lighttpd"
 
@@ -217,7 +217,7 @@ src_compile() {
 src_install() {
 	webapp_src_preinst
 	emake install || die "Cannot install"
-	
+
 	dodoc UPGRADING*
 
 	# make sure we don't clobber existing site configuration
