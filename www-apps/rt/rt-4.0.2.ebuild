@@ -1,11 +1,13 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header$
 inherit webapp eutils depend.apache confutils
 
 DESCRIPTION="RT is an enterprise-grade ticketing system"
 HOMEPAGE="http://www.bestpractical.com/rt/"
 SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
-RESTRICT="mirror"
 
-KEYWORDS="~amd64 ~ppc ~x86"
+KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
 IUSE="mysql postgres fastcgi modperl lighttpd"
 
@@ -211,7 +213,7 @@ src_compile() {
 		$(enable_extension_withonly fastcgi fastcgi) \
 		$(enable_extension_withonly fastcgi lighttpd)" \
 
-	if ! useq fastcgi && ! useq lighttpd; then
+	if ! use fastcgi && ! use lighttpd; then
 		myconf="${myconf} --with-modperl2"
 	fi
 
@@ -230,12 +232,12 @@ src_compile() {
 src_install() {
 	webapp_src_preinst
 	emake install || die "Cannot install"
-	
-	dodoc ${S}/docs/UPGRADING*
-	dodoc ${S}/docs/*.pod
-	dodoc ${S}/docs/network-diagram.svg
-	cp -R ${S}/docs/customizing/ ${D}/usr/share/doc/${P}/
-	cp -R ${S}/docs/extending/ ${D}/usr/share/doc/${P}/
+
+	dodoc "${S}"/docs/UPGRADING*
+	dodoc "${S}"/docs/*.pod
+	dodoc "${S}"/docs/network-diagram.svg
+	cp -R "${S}"/docs/customizing/ "${D}"/usr/share/doc/"${P}"/
+	cp -R "${S}"/docs/extending/ "${D}"/usr/share/doc/"${P}"/
 
 	# make sure we don't clobber existing site configuration
 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
