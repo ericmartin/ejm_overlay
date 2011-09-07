@@ -239,6 +239,7 @@ src_install() {
 	fi
 
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var
+	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var/mason_data/obj
 
 	webapp_postinst_txt en "${FILESDIR}"/postinstall-en.txt
 	webapp_hook_script "${FILESDIR}"/reconfig
