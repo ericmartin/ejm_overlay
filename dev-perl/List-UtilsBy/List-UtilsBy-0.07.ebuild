@@ -13,4 +13,5 @@ IUSE=""
 DEPEND="
 		virtual/perl-Module-Build
 "
+RDEPEND=${DEPEND}
 SRC_TEST="do"

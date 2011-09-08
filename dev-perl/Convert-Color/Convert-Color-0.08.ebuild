@@ -14,4 +14,5 @@ DEPEND="
 		virtual/perl-Module-Build
 		dev-perl/List-UtilsBy
 "
+RDEPEND=${DEPEND}
 SRC_TEST="do"

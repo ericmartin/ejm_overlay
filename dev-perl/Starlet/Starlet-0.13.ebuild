@@ -15,4 +15,5 @@ DEPEND="
 		>=dev-perl/Server-Starter-0.06
 		>=dev-perl/Test-TCP-0.15
 "
+RDEPEND=${DEPEND}
 SRC_TEST="do"
