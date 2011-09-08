@@ -1,3 +1,6 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/www-apps/rt/rt-3.6.7.ebuild,v 1.1 2008/07/01 16:48:46 wrobel Exp $
 EAPI=2
 
 MODULE_AUTHOR=KAZUHO
@@ -12,4 +15,5 @@ DEPEND="
 		>=dev-perl/Server-Starter-0.06
 		>=dev-perl/Test-TCP-0.15
 "
+RDEPEND=${DEPEND}
 SRC_TEST="do"
