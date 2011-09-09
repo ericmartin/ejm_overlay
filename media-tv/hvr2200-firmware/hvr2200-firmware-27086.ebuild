@@ -17,13 +17,13 @@ DEPEND=""
 RDEPEND=""
 
 src_unpack (){
-	mkdir /${S}
-	cp ${DISTDIR}/* ${S}/ 
-	chmod +x ${S}/extract.sh
+	mkdir /"${S}"
+	cp "${DISTDIR}"/* "${S}"/
+	chmod +x "${S}"/extract.sh
 }
 
 src_compile(){
-	${S}/extract.sh || die "Could not extract firmware"
+	"${S}"/extract.sh || die "Could not extract firmware"
 }
 
 src_install (){
