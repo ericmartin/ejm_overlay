@@ -1,26 +1,23 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-apps/rt/rt-3.6.7.ebuild,v 1.1 2008/07/01 16:48:46 wrobel Exp $
-
+# $Header: /var/cvsroot/gentoo-x86/www-apps/rt/rt-3.8.10.ebuild,v 1.1 2011/10/02 18:08:36 pva Exp $
 inherit webapp eutils depend.apache confutils
 
 DESCRIPTION="RT is an enterprise-grade ticketing system"
 HOMEPAGE="http://www.bestpractical.com/rt/"
 SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
 
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~ppc ~x86"
 LICENSE="GPL-2"
 IUSE="mysql postgres fastcgi modperl lighttpd"
 
 DEPEND="
-	>=dev-lang/perl-5.8.9
-
+	>=dev-lang/perl-5.8.3
 	dev-perl/Email-Address
 	dev-perl/MIME-Types
 	dev-perl/PerlIO-eol
 	dev-perl/GnuPG-Interface
 	dev-perl/net-server
-	>=dev-perl/HTTP-Server-Simple-0.34
 	dev-perl/File-ShareDir
 	dev-perl/Data-ICal
 	>=dev-perl/HTML-RewriteAttributes-0.02
@@ -31,7 +28,7 @@ DEPEND="
 	>=dev-perl/class-returnvalue-0.40
 	>=dev-perl/CSS-Squish-0.06
 	>=dev-perl/DBI-1.37
-	>=dev-perl/dbix-searchbuilder-1.54
+	>=dev-perl/dbix-searchbuilder-1.53
 	>=dev-perl/Devel-StackTrace-1.19
 	dev-perl/GD
 	dev-perl/GDGraph
@@ -39,7 +36,7 @@ DEPEND="
 	dev-perl/GraphViz
 	dev-perl/Module-Refresh
 	dev-perl/HTML-Format
-	>dev-perl/HTML-Mason-1.36
+	>dev-perl/HTML-Mason-1.31
 	dev-perl/HTML-Parser
 	>=dev-perl/HTML-Scrubber-0.08
 	dev-perl/HTML-Tree
@@ -48,14 +45,14 @@ DEPEND="
 	dev-perl/locale-maketext-fuzzy
 	>=dev-perl/locale-maketext-lexicon-0.32
 	>=dev-perl/log-dispatch-2.0
-	>=dev-perl/MailTools-1.57
-	>=dev-perl/MIME-tools-5.425
+	>=dev-perl/MailTools-1.60
+	>=dev-perl/MIME-tools-5.417
 	>=dev-perl/Module-Versions-Report-1.05
 	dev-perl/regexp-common
 	dev-perl/TermReadKey
 	dev-perl/text-autoformat
 	>=dev-perl/Text-Quoted-2.02
-	>=dev-perl/text-template-1.44
+	dev-perl/text-template
 	>=dev-perl/Text-WikiFormat-0.76
 	dev-perl/text-wrapper
 	dev-perl/TimeDate
@@ -63,7 +60,7 @@ DEPEND="
 	>=dev-perl/Tree-Simple-1.04
 	dev-perl/UNIVERSAL-require
 	>=dev-perl/XML-RSS-1.05
-	>=virtual/perl-CGI-3.38
+	>=virtual/perl-CGI-2.92
 	virtual/perl-digest-base
 	>=virtual/perl-Digest-MD5-2.27
 	>=virtual/perl-File-Spec-0.8
@@ -216,7 +213,7 @@ src_compile() {
 
 src_install() {
 	webapp_src_preinst
-	emake install || die "Cannot install"
+	emake install || die
 
 	dodoc UPGRADING*
 

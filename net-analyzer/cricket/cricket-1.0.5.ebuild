@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 inherit perl-module eutils
@@ -17,7 +17,7 @@ DEPEND="
 	dev-perl/libwww-perl
 	dev-perl/SNMP_Session
 	dev-perl/TimeDate
-	net-analyzer/rrdtool	
+	net-analyzer/rrdtool
 	virtual/perl-DB_File
 	virtual/perl-Digest-MD5
 	virtual/perl-Time-HiRes"
@@ -36,7 +36,7 @@ src_install() {
 	dodir /home/cricket/${PF} || die "could not create directory"
 	dosym /home/cricket/${PF} /home/cricket/cricket || die "could not create symlink"
 	cp -R "${S}/" "${D}/home/cricket/" || die "copy failed"
-	
+
 	dodoc README CHANGES || die "could not install documentation"
 	dohtml doc/* || die "could not install documentation"
 }
