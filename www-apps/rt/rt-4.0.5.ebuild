@@ -14,15 +14,6 @@ IUSE="mysql postgres fastcgi modperl lighttpd"
 DEPEND="
 	>=dev-lang/perl-5.8.9
 
-	dev-perl/Email-Address
-	dev-perl/MIME-Types
-	dev-perl/PerlIO-eol
-	dev-perl/GnuPG-Interface
-	dev-perl/net-server
-	>=dev-perl/HTTP-Server-Simple-0.34
-	dev-perl/File-ShareDir
-	dev-perl/Data-ICal
-	>=dev-perl/HTML-RewriteAttributes-0.02
 	>=dev-perl/Apache-Session-1.53
 	dev-perl/Cache-Simple-TimedExpiry
 	dev-perl/Calendar-Simple
@@ -34,26 +25,25 @@ DEPEND="
 	dev-perl/GD
 	dev-perl/GDGraph
 	dev-perl/GDTextUtil
-	dev-perl/GraphViz
-	dev-perl/Module-Refresh
 	dev-perl/HTML-Format
 	>=dev-perl/HTML-Mason-1.43
 	dev-perl/HTML-Parser
 	>=dev-perl/HTML-Scrubber-0.08
 	dev-perl/HTML-Tree
+	>=dev-perl/HTTP-Server-Simple-0.34
 	>=dev-perl/HTTP-Server-Simple-Mason-0.14
 	dev-perl/libwww-perl
 	dev-perl/locale-maketext-fuzzy
 	>=dev-perl/locale-maketext-lexicon-0.32
 	>=dev-perl/log-dispatch-2.2.3
-	>=dev-perl/MailTools-1.57
+	>=dev-perl/MailTools-1.60
 	>=dev-perl/MIME-tools-5.425
 	>=dev-perl/Module-Versions-Report-1.05
 	dev-perl/regexp-common
 	dev-perl/TermReadKey
 	dev-perl/text-autoformat
 	>=dev-perl/Text-Quoted-2.02
-	>=dev-perl/text-template-1.44
+	dev-perl/text-template
 	>=dev-perl/Text-WikiFormat-0.76
 	dev-perl/text-wrapper
 	dev-perl/TimeDate
@@ -72,6 +62,16 @@ DEPEND="
 	virtual/perl-Scalar-List-Utils
 	>=virtual/perl-Storable-2.08
 	virtual/perl-Time-HiRes
+	dev-perl/File-ShareDir
+	dev-perl/HTML-RewriteAttributes
+	dev-perl/Data-ICal
+	dev-perl/Email-Address
+	dev-perl/MIME-Types
+	dev-perl/PerlIO-eol
+	dev-perl/GnuPG-Interface
+	dev-perl/net-server
+	dev-perl/GraphViz
+	dev-perl/Module-Refresh
 	dev-perl/Regexp-IPv6
 	dev-perl/JSON
 	dev-perl/IPC-Run3
@@ -100,7 +100,10 @@ DEPEND="
 RDEPEND="${DEPEND}
 	virtual/mta
 	!lighttpd? ( ${APACHE2_DEPEND} modperl? ( www-apache/mod_perl ) )
-	lighttpd? ( >=www-servers/lighttpd-1.3.13 )
+	lighttpd? (
+		>=www-servers/lighttpd-1.3.13
+		sys-apps/openrc
+	)
 "
 
 need_httpd_cgi
@@ -142,7 +145,7 @@ add_user_rt() {
 
 	elog " - Userid: ${euid}"
 
-	enewuser rt ${euid} -1 /dev/null rt > /dev/null
+	enewuser rt ${euid} -1 /dev/null rt
 	return 0
 }
 
@@ -155,7 +158,7 @@ pkg_setup() {
 	ewarn "and follow the included instructions."
 	ewarn
 	epause 5
-	enewgroup rt >/dev/null
+	enewgroup rt
 	add_user_rt || die "Could not add user"
 }
 
@@ -258,6 +261,7 @@ src_install() {
 	fi
 
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var
+	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var/mason_data/obj
 
 	webapp_postinst_txt en "${FILESDIR}"/postinstall-en.txt
 	webapp_hook_script "${FILESDIR}"/reconfig
