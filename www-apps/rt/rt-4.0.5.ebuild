@@ -9,7 +9,7 @@ SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
 
 KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
-IUSE="mysql postgres fastcgi modperl lighttpd"
+IUSE="mysql postgres fastcgi lighttpd"
 
 DEPEND="
 	>=dev-lang/perl-5.8.9
@@ -99,7 +99,7 @@ DEPEND="
 
 RDEPEND="${DEPEND}
 	virtual/mta
-	!lighttpd? ( ${APACHE2_DEPEND} modperl? ( www-apache/mod_perl ) )
+	!lighttpd? ( ${APACHE2_DEPEND} )
 	lighttpd? (
 		>=www-servers/lighttpd-1.3.13
 		sys-apps/openrc
@@ -176,27 +176,35 @@ src_unpack() {
 }
 
 src_compile() {
-	local web="apache"
-	use lighttpd && web="lighttpd"
-
-	local webhandler='modperl2'
-	use fastcgi && webhandler='fastcgi'
-
-	local dbtype dba
+	local web myconf depsconf
 
 	if use mysql; then
-		dbtype="--with-db-type=mysql"
-		dba="--with-db-dba=root"
+		myconf+=" --with-db-type=mysql --with-db-dba=root"
+		depsconf+=" --with-mysql"
 	fi
 	if use postgres;then
-		dbtype="--with-db-type=Pg"
-		dba="--with-db-dba=postgres"
+		myconf+=" --with-db-type=Pg --with-db-dba=postgres"
+		depsconf+=" --with-postgresql"
 	fi
 	if use postgres && use mysql; then
 		ewarn "Both mysql and postgres USE flags enabled, default is mysql."
 		ewarn "You can set the default value in RT_SiteConfig before DB init."
-		dbtype="--with-db-type=mysql"
-		dba="--with-db-dba=root"
+		myconf+=" --with-db-type=mysql --with-db-dba=root"
+		depsconf+=" --with-mysql"
+	fi
+
+	if use fastcgi ; then
+		myconf+=" --with-web-handler=fastcgi"
+		web="apache"
+		depsconf+=" --with-fastcgi"
+	elif use lighttpd ; then
+		myconf+=" --with-web-handler=fastcgi"
+		web="lighttpd"
+		depsconf+=" --with-fastcgi"
+	else
+		myconf+=" --with-web-handler=modperl2"
+		web="apache"
+		depsconf+=" --with-modperl2"
 	fi
 
 	./configure --enable-layout=Gentoo \
@@ -206,21 +214,10 @@ src_compile() {
 		--with-rt-group=rt \
 		--with-web-user=${web} \
 		--with-web-group=${web} \
-		--with-web-handler=${webhandler} \
-		${dbtype} ${dba}
+		${myconf}
 
 	# check for missing deps and ask to report if something is broken
-	local myconf="--verbose \
-		$(enable_extension_withonly mysql mysql) \
-		$(enable_extension_withonly postgresql postgres) \
-		$(enable_extension_withonly fastcgi fastcgi) \
-		$(enable_extension_withonly fastcgi lighttpd)" \
-
-	if ! use fastcgi && ! use lighttpd; then
-		myconf="${myconf} --with-modperl2"
-	fi
-
-	/usr/bin/perl ./sbin/rt-test-dependencies ${myconf} > "${T}"/t
+	/usr/bin/perl ./sbin/rt-test-dependencies ${depsconf} > "${T}"/t
 	if grep -q "MISSING" "${T}"/t; then
 		ewarn "Missing Perl dependency!"
 		ewarn
@@ -234,7 +231,7 @@ src_compile() {
 
 src_install() {
 	webapp_src_preinst
-	emake install || die "Cannot install"
+	emake install || die
 
 	dodoc "${S}"/docs/UPGRADING*
 	dodoc "${S}"/docs/*.pod
