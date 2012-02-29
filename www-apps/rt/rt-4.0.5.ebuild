@@ -258,6 +258,8 @@ src_install() {
 		doins "${FILESDIR}"/{rt_apache2_fcgi.conf,rt_apache2.conf}
 	fi
 
+	# ${MY_HOSTROOTDIR}/${PF}/var and var/mason_data/obj NEED to be owned by
+	# apache
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var/mason_data/obj
 
