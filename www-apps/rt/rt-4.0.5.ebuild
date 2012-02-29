@@ -89,6 +89,7 @@ DEPEND="
 	dev-perl/Text-Password-Pronounceable
 	dev-perl/Starlet
 	dev-perl/DBD-SQLite
+	dev-perl/Devel-GlobalDestruction
 
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
