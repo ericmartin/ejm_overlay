@@ -1,7 +1,10 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-apps/rt/rt-3.8.10.ebuild,v 1.1 2011/10/02 18:08:36 pva Exp $
-inherit webapp eutils depend.apache confutils
+# $Header: $
+
+EAPI=4
+
+inherit webapp eutils depend.apache
 
 DESCRIPTION="RT is an enterprise-grade ticketing system"
 HOMEPAGE="http://www.bestpractical.com/rt/"
@@ -9,7 +12,8 @@ SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
 
 KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
-IUSE="mysql postgres fastcgi lighttpd"
+IUSE="+mysql postgres fastcgi lighttpd"
+REQUIRED_USE="|| ( mysql postgres )"
 
 DEPEND="
 	>=dev-lang/perl-5.8.9
@@ -91,9 +95,12 @@ DEPEND="
 	dev-perl/DBD-SQLite
 	dev-perl/Devel-GlobalDestruction
 
+	fastcgi? (
+		dev-perl/FCGI
+		dev-perl/FCGI-ProcManager
+	)
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
-	fastcgi? ( dev-perl/FCGI )
 	mysql? ( >=dev-perl/DBD-mysql-2.1018 )
 	postgres? ( >=dev-perl/DBD-Pg-1.43 )
 "
@@ -126,7 +133,6 @@ add_user_rt() {
 			ewarn "uid of user rt is less than 1000. suexec2 will not work."
 			ewarn "If you want to use FastCGI, please delete the user 'rt'"
 			ewarn "from your system and re-emerge www-apps/rt"
-			epause
 		fi
 		return 0 # all is well
 	fi
@@ -152,21 +158,18 @@ add_user_rt() {
 
 pkg_setup() {
 	webapp_pkg_setup
+
 	ewarn
-	ewarn "If you are upgrading from an existing _RT2_ installation,"
-	ewarn "stop this ebuild (Ctrl-C now), download the upgrade tool,"
-	ewarn "http://bestpractical.com/pub/rt/devel/rt2-to-rt3.tar.gz"
-	ewarn "and follow the included instructions."
+	ewarn "If you are upgrading from an existing RT installation"
+	ewarn "make sure to read the related upgrade documentation in"
+	ewarn "${ROOT}usr/share/doc/${PF}."
 	ewarn
-	epause 5
+
 	enewgroup rt
 	add_user_rt || die "Could not add user"
 }
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	# add Gentoo-specific layout
 	cat "${FILESDIR}"/config.layout-gentoo >> config.layout
 	sed -e "s|PREFIX|${D}/${MY_HOSTROOTDIR}/${PF}|
@@ -176,18 +179,18 @@ src_unpack() {
 	sed -e "s|\$args{'with-DEV'} =1;|#\$args{'with-DEV'} =1;|" -i sbin/rt-test-dependencies.in || die
 }
 
-src_compile() {
+src_configure() {
 	local web myconf depsconf
 
-	if use mysql; then
+	if use mysql ; then
 		myconf+=" --with-db-type=mysql --with-db-dba=root"
 		depsconf+=" --with-mysql"
 	fi
-	if use postgres;then
+	if use postgres ; then
 		myconf+=" --with-db-type=Pg --with-db-dba=postgres"
 		depsconf+=" --with-postgresql"
 	fi
-	if use postgres && use mysql; then
+	if use postgres && use mysql ; then
 		ewarn "Both mysql and postgres USE flags enabled, default is mysql."
 		ewarn "You can set the default value in RT_SiteConfig before DB init."
 		myconf+=" --with-db-type=mysql --with-db-dba=root"
@@ -230,9 +233,11 @@ src_compile() {
 	fi
 }
 
+src_compile() { :; }
+
 src_install() {
 	webapp_src_preinst
-	emake install || die
+	emake install
 
 	dodoc "${S}"/docs/UPGRADING*
 	dodoc "${S}"/docs/*.pod
@@ -250,16 +255,15 @@ src_install() {
 	insinto "${MY_HOSTROOTDIR}/${PF}"
 	doins -r etc/upgrade
 
-	if use lighttpd; then
+	if use lighttpd ; then
 		newinitd "${FILESDIR}"/${PN}.init.d ${PN}
 		newconfd "${FILESDIR}"/${PN}.conf.d ${PN}
-		dosed "s/@@PF@@/${PF}/g" /etc/conf.d/${PN}
+		sed -i -e "s/@@PF@@/${PF}/g" "${D}"/etc/conf.d/${PN} || die
 	else
 		doins "${FILESDIR}"/{rt_apache2_fcgi.conf,rt_apache2.conf}
 	fi
 
-	# ${MY_HOSTROOTDIR}/${PF}/var and var/mason_data/obj NEED to be owned by
-	# apache
+	# require the web server's permissions
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var/mason_data/obj
 
