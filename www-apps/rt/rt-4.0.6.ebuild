@@ -1,8 +1,10 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-apps/rt/rt-3.6.7.ebuild,v 1.1 2008/07/01 16:48:46 wrobel Exp $
+# $Header: $
 
-inherit webapp eutils depend.apache confutils
+EAPI=4
+
+inherit webapp eutils depend.apache
 
 DESCRIPTION="RT is an enterprise-grade ticketing system"
 HOMEPAGE="http://www.bestpractical.com/rt/"
@@ -10,20 +12,11 @@ SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
 
 KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
-IUSE="mysql postgres fastcgi modperl lighttpd"
+IUSE="+mysql postgres fastcgi lighttpd"
+REQUIRED_USE="|| ( mysql postgres )"
 
 DEPEND="
 	>=dev-lang/perl-5.8.9
-
-	dev-perl/Email-Address
-	dev-perl/MIME-Types
-	dev-perl/PerlIO-eol
-	dev-perl/GnuPG-Interface
-	dev-perl/net-server
-	>=dev-perl/HTTP-Server-Simple-0.34
-	dev-perl/File-ShareDir
-	dev-perl/Data-ICal
-	>=dev-perl/HTML-RewriteAttributes-0.02
 
 	>=dev-perl/Apache-Session-1.53
 	dev-perl/Cache-Simple-TimedExpiry
@@ -31,31 +24,30 @@ DEPEND="
 	>=dev-perl/class-returnvalue-0.40
 	>=dev-perl/CSS-Squish-0.06
 	>=dev-perl/DBI-1.37
-	>=dev-perl/dbix-searchbuilder-1.54
+	>=dev-perl/dbix-searchbuilder-1.59
 	>=dev-perl/Devel-StackTrace-1.19
 	dev-perl/GD
 	dev-perl/GDGraph
 	dev-perl/GDTextUtil
-	dev-perl/GraphViz
-	dev-perl/Module-Refresh
 	dev-perl/HTML-Format
-	>dev-perl/HTML-Mason-1.36
+	>=dev-perl/HTML-Mason-1.43
 	dev-perl/HTML-Parser
 	>=dev-perl/HTML-Scrubber-0.08
 	dev-perl/HTML-Tree
-	>=dev-perl/HTTP-Server-Simple-Mason-0.09
+	>=dev-perl/HTTP-Server-Simple-0.34
+	>=dev-perl/HTTP-Server-Simple-Mason-0.14
 	dev-perl/libwww-perl
 	dev-perl/locale-maketext-fuzzy
 	>=dev-perl/locale-maketext-lexicon-0.32
-	>=dev-perl/log-dispatch-2.0
-	>=dev-perl/MailTools-1.57
+	>=dev-perl/log-dispatch-2.2.3
+	>=dev-perl/MailTools-1.60
 	>=dev-perl/MIME-tools-5.425
 	>=dev-perl/Module-Versions-Report-1.05
 	dev-perl/regexp-common
 	dev-perl/TermReadKey
 	dev-perl/text-autoformat
 	>=dev-perl/Text-Quoted-2.02
-	>=dev-perl/text-template-1.44
+	dev-perl/text-template
 	>=dev-perl/Text-WikiFormat-0.76
 	dev-perl/text-wrapper
 	dev-perl/TimeDate
@@ -74,18 +66,52 @@ DEPEND="
 	virtual/perl-Scalar-List-Utils
 	>=virtual/perl-Storable-2.08
 	virtual/perl-Time-HiRes
+	dev-perl/File-ShareDir
+	dev-perl/HTML-RewriteAttributes
+	dev-perl/Data-ICal
+	dev-perl/Email-Address
+	dev-perl/MIME-Types
+	dev-perl/PerlIO-eol
+	dev-perl/GnuPG-Interface
+	dev-perl/net-server
+	dev-perl/GraphViz
+	dev-perl/Module-Refresh
+	dev-perl/Regexp-IPv6
+	dev-perl/JSON
+	dev-perl/IPC-Run3
+	dev-perl/Net-CIDR
+	>=dev-perl/Class-Accessor-0.34
+	dev-perl/Convert-Color
+	dev-perl/Plack
+	dev-perl/HTML-Quoted
+	dev-perl/Regexp-Common-net-CIDR
+	dev-perl/HTML-Mason-PSGIHandler
+	dev-perl/CGI-Emulate-PSGI
+	dev-perl/CGI-PSGI
+	>=dev-perl/log-dispatch-2.23
+	dev-perl/JavaScript-Minifier
+	dev-perl/Text-Password-Pronounceable
+	dev-perl/Starlet
+	dev-perl/DBD-SQLite
+	dev-perl/Devel-GlobalDestruction
 
+	fastcgi? (
+		dev-perl/FCGI
+		dev-perl/FCGI-ProcManager
+	)
 	!lighttpd? ( dev-perl/Apache-DBI )
 	lighttpd? ( dev-perl/FCGI )
-	fastcgi? ( dev-perl/FCGI )
 	mysql? ( >=dev-perl/DBD-mysql-2.1018 )
 	postgres? ( >=dev-perl/DBD-Pg-1.43 )
 "
 
 RDEPEND="${DEPEND}
 	virtual/mta
-	!lighttpd? ( ${APACHE2_DEPEND} modperl? ( www-apache/mod_perl ) )
-	lighttpd? ( >=www-servers/lighttpd-1.3.13 )
+	!lighttpd? ( ${APACHE2_DEPEND} )
+	lighttpd? (
+		>=www-servers/lighttpd-1.3.13
+		sys-apps/openrc
+	)
 "
 
 need_httpd_cgi
@@ -107,7 +133,6 @@ add_user_rt() {
 			ewarn "uid of user rt is less than 1000. suexec2 will not work."
 			ewarn "If you want to use FastCGI, please delete the user 'rt'"
 			ewarn "from your system and re-emerge www-apps/rt"
-			epause
 		fi
 		return 0 # all is well
 	fi
@@ -127,27 +152,24 @@ add_user_rt() {
 
 	elog " - Userid: ${euid}"
 
-	enewuser rt ${euid} -1 /dev/null rt > /dev/null
+	enewuser rt ${euid} -1 /dev/null rt
 	return 0
 }
 
 pkg_setup() {
 	webapp_pkg_setup
+
 	ewarn
-	ewarn "If you are upgrading from an existing _RT2_ installation,"
-	ewarn "stop this ebuild (Ctrl-C now), download the upgrade tool,"
-	ewarn "http://bestpractical.com/pub/rt/devel/rt2-to-rt3.tar.gz"
-	ewarn "and follow the included instructions."
+	ewarn "If you are upgrading from an existing RT installation"
+	ewarn "make sure to read the related upgrade documentation in"
+	ewarn "${ROOT}usr/share/doc/${PF}."
 	ewarn
-	epause 5
-	enewgroup rt >/dev/null
+
+	enewgroup rt
 	add_user_rt || die "Could not add user"
 }
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	# add Gentoo-specific layout
 	cat "${FILESDIR}"/config.layout-gentoo >> config.layout
 	sed -e "s|PREFIX|${D}/${MY_HOSTROOTDIR}/${PF}|
@@ -157,28 +179,36 @@ src_unpack() {
 	sed -e "s|\$args{'with-DEV'} =1;|#\$args{'with-DEV'} =1;|" -i sbin/rt-test-dependencies.in || die
 }
 
-src_compile() {
-	local web="apache"
-	use lighttpd && web="lighttpd"
+src_configure() {
+	local web myconf depsconf
 
-	local webhandler='modperl2'
-	use fastcgi && webhandler='fastcgi'
-
-	local dbtype dba
-
-	if use mysql; then
-		dbtype="--with-db-type=mysql"
-		dba="--with-db-dba=root"
+	if use mysql ; then
+		myconf+=" --with-db-type=mysql --with-db-dba=root"
+		depsconf+=" --with-mysql"
 	fi
-	if use postgres;then
-		dbtype="--with-db-type=Pg"
-		dba="--with-db-dba=postgres"
+	if use postgres ; then
+		myconf+=" --with-db-type=Pg --with-db-dba=postgres"
+		depsconf+=" --with-postgresql"
 	fi
-	if use postgres && use mysql; then
+	if use postgres && use mysql ; then
 		ewarn "Both mysql and postgres USE flags enabled, default is mysql."
 		ewarn "You can set the default value in RT_SiteConfig before DB init."
-		dbtype="--with-db-type=mysql"
-		dba="--with-db-dba=root"
+		myconf+=" --with-db-type=mysql --with-db-dba=root"
+		depsconf+=" --with-mysql"
+	fi
+
+	if use fastcgi ; then
+		myconf+=" --with-web-handler=fastcgi"
+		web="apache"
+		depsconf+=" --with-fastcgi"
+	elif use lighttpd ; then
+		myconf+=" --with-web-handler=fastcgi"
+		web="lighttpd"
+		depsconf+=" --with-fastcgi"
+	else
+		myconf+=" --with-web-handler=modperl2"
+		web="apache"
+		depsconf+=" --with-modperl2"
 	fi
 
 	./configure --enable-layout=Gentoo \
@@ -188,21 +218,10 @@ src_compile() {
 		--with-rt-group=rt \
 		--with-web-user=${web} \
 		--with-web-group=${web} \
-		--with-web-handler=${webhandler} \
-		${dbtype} ${dba}
+		${myconf}
 
 	# check for missing deps and ask to report if something is broken
-	local my_conf="--verbose "
-	enable_extension_withonly  mysql      mysql
-	enable_extension_withonly  postgresql postgres
-	enable_extension_withonly  fastcgi    fastcgi
-	enable_extension_withonly  fastcgi    lighttpd
-
-	if ! use fastcgi && ! use lighttpd; then
-		my_conf="${my_conf} --with-modperl2"
-	fi
-
-	/usr/bin/perl ./sbin/rt-test-dependencies ${myconf} > "${T}"/t
+	/usr/bin/perl ./sbin/rt-test-dependencies ${depsconf} > "${T}"/t
 	if grep -q "MISSING" "${T}"/t; then
 		ewarn "Missing Perl dependency!"
 		ewarn
@@ -214,11 +233,17 @@ src_compile() {
 	fi
 }
 
+src_compile() { :; }
+
 src_install() {
 	webapp_src_preinst
-	emake install || die "Cannot install"
+	emake install
 
-	dodoc UPGRADING*
+	dodoc "${S}"/docs/UPGRADING*
+	dodoc "${S}"/docs/*.pod
+	dodoc "${S}"/docs/network-diagram.svg
+	cp -R "${S}"/docs/customizing/ "${D}"/usr/share/doc/"${P}"/
+	cp -R "${S}"/docs/extending/ "${D}"/usr/share/doc/"${P}"/
 
 	# make sure we don't clobber existing site configuration
 	rm -f "${D}"/${MY_HOSTROOTDIR}/${PF}/etc/RT_SiteConfig.pm
@@ -230,15 +255,17 @@ src_install() {
 	insinto "${MY_HOSTROOTDIR}/${PF}"
 	doins -r etc/upgrade
 
-	if use lighttpd; then
+	if use lighttpd ; then
 		newinitd "${FILESDIR}"/${PN}.init.d ${PN}
 		newconfd "${FILESDIR}"/${PN}.conf.d ${PN}
-		dosed "s/@@PF@@/${PF}/g" /etc/conf.d/${PN}
+		sed -i -e "s/@@PF@@/${PF}/g" "${D}"/etc/conf.d/${PN} || die
 	else
 		doins "${FILESDIR}"/{rt_apache2_fcgi.conf,rt_apache2.conf}
 	fi
 
+	# require the web server's permissions
 	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var
+	webapp_serverowned "${MY_HOSTROOTDIR}"/${PF}/var/mason_data/obj
 
 	webapp_postinst_txt en "${FILESDIR}"/postinstall-en.txt
 	webapp_hook_script "${FILESDIR}"/reconfig
