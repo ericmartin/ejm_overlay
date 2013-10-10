@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/www-apps/rt/rt-4.0.5.ebuild,v 1.2 2012/03/01 20:56:31 radhermit Exp $
 
 EAPI=4
 
@@ -12,46 +12,76 @@ SRC_URI="http://download.bestpractical.com/pub/${PN}/release/${P}.tar.gz"
 
 KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-2"
-IUSE="+mysql postgres fastcgi lighttpd"
+IUSE="mysql postgres fastcgi lighttpd"
 REQUIRED_USE="|| ( mysql postgres )"
 
+RESTRICT="test"
+
 DEPEND="
-	>=dev-lang/perl-5.8.9
+	>=dev-lang/perl-5.8.3
 
 	>=dev-perl/Apache-Session-1.53
 	dev-perl/Cache-Simple-TimedExpiry
 	dev-perl/Calendar-Simple
+	dev-perl/CGI-Emulate-PSGI
+	dev-perl/CGI-PSGI
+	>=dev-perl/Class-Accessor-0.34
 	>=dev-perl/class-returnvalue-0.40
+	dev-perl/Convert-Color
 	>=dev-perl/CSS-Squish-0.06
+	dev-perl/Data-ICal
+	dev-perl/DBD-SQLite
 	>=dev-perl/DBI-1.37
 	>=dev-perl/dbix-searchbuilder-1.59
+	dev-perl/Devel-GlobalDestruction
 	>=dev-perl/Devel-StackTrace-1.19
+	dev-perl/Email-Address
+	dev-perl/File-ShareDir
 	dev-perl/GD
 	dev-perl/GDGraph
 	dev-perl/GDTextUtil
+	dev-perl/GnuPG-Interface
+	dev-perl/GraphViz
 	dev-perl/HTML-Format
 	>=dev-perl/HTML-Mason-1.43
+	dev-perl/HTML-Mason-PSGIHandler
 	dev-perl/HTML-Parser
+	dev-perl/HTML-Quoted
+	dev-perl/HTML-RewriteAttributes
 	>=dev-perl/HTML-Scrubber-0.08
 	dev-perl/HTML-Tree
 	>=dev-perl/HTTP-Server-Simple-0.34
 	>=dev-perl/HTTP-Server-Simple-Mason-0.14
+	dev-perl/IPC-Run3
+	dev-perl/JavaScript-Minifier
+	dev-perl/JSON
 	dev-perl/libwww-perl
 	dev-perl/locale-maketext-fuzzy
 	>=dev-perl/locale-maketext-lexicon-0.32
 	>=dev-perl/log-dispatch-2.2.3
+	>=dev-perl/log-dispatch-2.23
 	>=dev-perl/MailTools-1.60
 	>=dev-perl/MIME-tools-5.425
+	dev-perl/MIME-Types
+	dev-perl/Module-Refresh
 	>=dev-perl/Module-Versions-Report-1.05
+	dev-perl/Net-CIDR
+	dev-perl/net-server
+	dev-perl/PerlIO-eol
+	dev-perl/Plack
 	dev-perl/regexp-common
+	dev-perl/Regexp-Common-net-CIDR
+	dev-perl/Regexp-IPv6
+	dev-perl/Starlet
 	dev-perl/TermReadKey
 	dev-perl/text-autoformat
+	dev-perl/Text-Password-Pronounceable
 	>=dev-perl/Text-Quoted-2.02
 	dev-perl/text-template
 	>=dev-perl/Text-WikiFormat-0.76
 	dev-perl/text-wrapper
-	dev-perl/TimeDate
 	dev-perl/Time-modules
+	dev-perl/TimeDate
 	>=dev-perl/Tree-Simple-1.04
 	dev-perl/UNIVERSAL-require
 	>=dev-perl/XML-RSS-1.05
@@ -66,34 +96,6 @@ DEPEND="
 	virtual/perl-Scalar-List-Utils
 	>=virtual/perl-Storable-2.08
 	virtual/perl-Time-HiRes
-	dev-perl/File-ShareDir
-	dev-perl/HTML-RewriteAttributes
-	dev-perl/Data-ICal
-	dev-perl/Email-Address
-	dev-perl/MIME-Types
-	dev-perl/PerlIO-eol
-	dev-perl/GnuPG-Interface
-	dev-perl/net-server
-	dev-perl/GraphViz
-	dev-perl/Module-Refresh
-	dev-perl/Regexp-IPv6
-	dev-perl/JSON
-	dev-perl/IPC-Run3
-	dev-perl/Net-CIDR
-	>=dev-perl/Class-Accessor-0.34
-	dev-perl/Convert-Color
-	dev-perl/Plack
-	dev-perl/HTML-Quoted
-	dev-perl/Regexp-Common-net-CIDR
-	dev-perl/HTML-Mason-PSGIHandler
-	dev-perl/CGI-Emulate-PSGI
-	dev-perl/CGI-PSGI
-	>=dev-perl/log-dispatch-2.23
-	dev-perl/JavaScript-Minifier
-	dev-perl/Text-Password-Pronounceable
-	dev-perl/Starlet
-	dev-perl/DBD-SQLite
-	dev-perl/Devel-GlobalDestruction
 
 	fastcgi? (
 		dev-perl/FCGI
@@ -256,8 +258,8 @@ src_install() {
 	doins -r etc/upgrade
 
 	if use lighttpd ; then
-		newinitd "${FILESDIR}"/${PN}.init.d ${PN}
-		newconfd "${FILESDIR}"/${PN}.conf.d ${PN}
+		newinitd "${FILESDIR}"/${PN}.init.d.2 ${PN}
+		newconfd "${FILESDIR}"/${PN}.conf.d.2 ${PN}
 		sed -i -e "s/@@PF@@/${PF}/g" "${D}"/etc/conf.d/${PN} || die
 	else
 		doins "${FILESDIR}"/{rt_apache2_fcgi.conf,rt_apache2.conf}
